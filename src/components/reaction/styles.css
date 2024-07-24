@@ -15,6 +15,7 @@ body {
   height: 100vh; /* Full height of viewport */
   background-color: #f0f0f0; /* Light grey background */
   font-family: Arial, sans-serif; /* Clean font */
+  position: relative; /* Position context for absolute positioning */
   padding: 20px; /* Padding to avoid content touching edges */
   box-sizing: border-box; /* Include padding and border in the element's total width and height */
 }
@@ -44,7 +45,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 10px; /* Space between buttons */
-  margin-bottom: 20px; /* Space below the buttons */
+  margin-bottom: 40px; /* Space below the buttons */
 }
 
 button {
@@ -74,12 +75,15 @@ button:not(:disabled):active {
 .reaction-time {
   font-size: 20px; /* Larger font size for better readability */
   font-weight: bold;
-  color: #000000; /* Black color for text to ensure readability */
   background-color: #ffffff; /* White background for contrast */
   padding: 10px 20px; /* Padding around the text */
   border-radius: 5px; /* Rounded corners */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for better visibility */
-  margin-top: 500px; /* Space between the buttons and reaction time box */
+  position: absolute; /* Absolute positioning */
+  top: 100px; /* Distance from the top of the container */
+  left: 50%;
+  transform: translateX(-50%); /* Center horizontally */
+  z-index: 10; /* Ensure it appears above other content */
 }
 
 /* Responsive design */
@@ -96,7 +100,7 @@ button:not(:disabled):active {
   .reaction-time {
     font-size: 18px; /* Adjust font size for smaller screens */
     padding: 8px 16px; /* Adjust padding for smaller screens */
-    margin-top: 20px; /* Ensure there's space below the buttons */
+    top: 80px; /* Adjust top position for smaller screens */
   }
 
   button {
