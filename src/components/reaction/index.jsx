@@ -11,44 +11,57 @@ export default function ReactionLights() {
   const handleStartClick = () => {
     setSequenceStarted(true);
     setLightsOut(false);
-    setLightIndex(0);
+    setLightIndex(1); // Immediately turn on the first light
     setReactionTime(null);
+    lightsOutTimeRef.current = null;
 
-    for (let i = 1; i <= 5; i++) {
-      setTimeout(() => setLightIndex(i), i * 1000);
-    }
-
+    // Set the rest of the lights with a delay
     setTimeout(() => {
-      const randomDelay = Math.random() * 1000;
+      for (let i = 2; i <= 5; i++) {
+        setTimeout(() => setLightIndex(i), (i - 1) * 1000);
+      }
+
+      // After all lights have been turned on, start the sequence for lights out
       setTimeout(() => {
-        setLightIndex(0);
-        lightsOutTimeRef.current = Date.now();
-        setLightsOut(true);
-      }, randomDelay);
-    }, 5000);
+        const randomDelay = Math.random() * 1000;
+        setTimeout(() => {
+          setLightIndex(0);
+          lightsOutTimeRef.current = Date.now();
+          setLightsOut(true);
+        }, randomDelay);
+      }, 5000);
+    }, 0); // Start the rest of the sequence immediately after setting the first light
   };
 
-  const handleAfterMouseDown = () => {
+  const handleReaction = () => {
     if (lightsOutTimeRef.current) {
       const reactionTime = Date.now() - lightsOutTimeRef.current;
       setReactionTime(reactionTime);
       setLightsOut(false);
       setSequenceStarted(false);
+      lightsOutTimeRef.current = null;
     }
   };
 
   useEffect(() => {
     const handleKeyDown = (event) => {
-      if (event.code === "Space") {
-        if (lightsOut) {
-          handleAfterMouseDown();
-        }
+      if (lightsOut) {
+        handleReaction();
+      }
+    };
+
+    const handleMouseDown = () => {
+      if (lightsOut) {
+        handleReaction();
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("mousedown", handleMouseDown);
+
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("mousedown", handleMouseDown);
     };
   }, [lightsOut]);
 
@@ -73,7 +86,7 @@ export default function ReactionLights() {
           Ready...
         </button>
         <button
-          onMouseDown={handleAfterMouseDown}
+          onMouseDown={handleReaction}
           disabled={!lightsOut}
           className="px-6 py-3 text-white bg-green-500 rounded-md disabled:bg-gray-300 transition-colors duration-300 hover:bg-green-700 active:shadow-md"
         >
@@ -85,6 +98,9 @@ export default function ReactionLights() {
           Your reaction time: {reactionTime} ms
         </p>
       )}
+      <p className="hidden lg:block absolute bottom-5 left-1/2 transform -translate-x-1/2 text-sm text-gray-600">
+        You can test your reaction by pressing keys as well.
+      </p>
     </div>
   );
 }
