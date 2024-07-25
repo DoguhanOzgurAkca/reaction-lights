@@ -11,17 +11,15 @@ export default function ReactionLights() {
   const handleStartClick = () => {
     setSequenceStarted(true);
     setLightsOut(false);
-    setLightIndex(1); // Immediately turn on the first light
+    setLightIndex(1);
     setReactionTime(null);
     lightsOutTimeRef.current = null;
 
-    // Set the rest of the lights with a delay
     setTimeout(() => {
       for (let i = 2; i <= 5; i++) {
         setTimeout(() => setLightIndex(i), (i - 1) * 1000);
       }
 
-      // After all lights have been turned on, start the sequence for lights out
       setTimeout(() => {
         const randomDelay = Math.random() * 1000;
         setTimeout(() => {
@@ -30,7 +28,7 @@ export default function ReactionLights() {
           setLightsOut(true);
         }, randomDelay);
       }, 5000);
-    }, 0); // Start the rest of the sequence immediately after setting the first light
+    }, 0);
   };
 
   const handleReaction = () => {
